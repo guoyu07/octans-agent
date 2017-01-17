@@ -388,6 +388,3 @@ def parallel_run_task():
     except Exception as e:
         Logger.error("try run_task exception --------------> %s" %(str(e)))
         return return_failed(-1, e.message), 500
-
-Contact GitHub API Training Shop Blog About
-
