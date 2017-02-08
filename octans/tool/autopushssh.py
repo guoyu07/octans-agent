@@ -63,4 +63,4 @@ def upload_sshkey():
     raise Exception("Upload ssh key's Exception raised!")
 
 phydev_con()
-upload_sshkey()
+#upload_sshkey()
