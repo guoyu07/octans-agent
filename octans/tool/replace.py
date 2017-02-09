@@ -22,3 +22,15 @@ with open('/data/octans/octans/tool/autopushssh.py','w') as w:
            w.write(l.replace('127.0.0.1:7070', argv[3]))
            continue
        w.write(l)
+
+with open('/data/octans/octans/tool/auto_report.py','r') as r:
+    lines=r.readlines()
+with open('/data/octans/octans/tool/auto_report.py','w') as w:
+    for l in lines:
+       if l.startswith('    res = requests.post'):
+           w.write(l.replace('127.0.0.1:7070', argv[3]))
+           continue
+       if l.startswith('    res = requests.post'):
+           w.write(l.replace('127.0.0.1:7070', argv[3]))
+           continue
+       w.write(l)
