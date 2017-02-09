@@ -3,6 +3,7 @@ import json
 import time
 import socket
 import datetime
+from sys import argv
 myname = socket.getfqdn(socket.gethostname())
 myaddr = socket.gethostbyname(myname)
 
@@ -24,7 +25,7 @@ def retry(attempt):
 def run_task_over():
     import uuid
 #    import pdb;pdb.set_trace()
-    payload = {"nodes":[myaddr],
+    payload = {"nodes":[argv[1]],
         "tasks":["init"],
         "tasktype": "ansible_role",
         "user": "root",
