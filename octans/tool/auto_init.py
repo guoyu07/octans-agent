@@ -32,9 +32,9 @@ def run_task_over():
         "fork_num": 5}
     headers ={'content-type': 'application/json',
               'X-CORRELATION-ID': str(uuid.uuid1()),
-              'X-SOURCE':'jupiter'
+              'X-SOURCE':'jupiter',
               'Cache-Control':'no-cache'}
-    r = requests.post("http://127.0.0.1:8000/task/run",data=json.dumps(payload), headers=headers)
+    r = requests.post("http://127.0.0.1:8000/api/run",data=json.dumps(payload), headers=headers)
     if r.json().has_key("status"):
         if r.json()["status"] == "started":
             print(r.json())
