@@ -24,7 +24,7 @@ def retry(attempt):
 def run_task_over():
     import uuid
 #    import pdb;pdb.set_trace()
-    payload = {"node":myaddr,
+    payload = {"nodes":[myaddr],
         "tasks":["init"],
         "tasktype": "ansible_role",
         "user": "root",
