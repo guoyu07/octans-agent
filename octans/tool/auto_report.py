@@ -3,6 +3,7 @@ import json
 import socket
 import os
 import hashlib
+from sys import argv
 from Crypto.PublicKey import RSA
 
 myname = socket.getfqdn(socket.gethostname())
