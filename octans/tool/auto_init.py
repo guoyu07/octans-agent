@@ -33,7 +33,7 @@ def check_task_status(task_id):
     r = requests.post("http://127.0.0.1:8000/api/check",data=json.dumps(payload), headers=headers)
     if r.json().has_key("content"):
         if  r.json()["content"].has_key("task"):
-			if r.json()["content"]["task"].has_key("status"):
+            if r.json()["content"]["task"].has_key("status"):
                 if r.json()["content"]["task"]["status"] == 2:
                     return "success"
     raise Exception("Run task's Exception raised!")
