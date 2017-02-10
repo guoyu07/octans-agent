@@ -3,6 +3,7 @@ import json
 import time
 import socket
 import datetime
+import uuid
 from sys import argv
 myname = socket.getfqdn(socket.gethostname())
 myaddr = socket.gethostbyname(myname)
@@ -32,7 +33,7 @@ def check_task_status(task_id):
     r = requests.post("http://127.0.0.1:8000/api/check",data=json.dumps(payload), headers=headers)
     if r.json().has_key("content"):
         if  r.json()["content"].has_key("task"):
-            if r.json()["content"]["task"].has_key("status")
+			if r.json()["content"]["task"].has_key("status"):
                 if r.json()["content"]["task"]["status"] == 2:
                     return "success"
     raise Exception("Run task's Exception raised!")
@@ -57,7 +58,7 @@ def run_task_over():
             print(r.json()['content']['id'])
             task_id = r.json()['content']['id']
             task_status = check_task_status(task_id)
-            if task_status = "success":
+            if task_status == "success":
                 return
     raise Exception("Run task's Exception raised!")
 run_task_over()
