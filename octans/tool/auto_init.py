@@ -21,7 +21,6 @@ def retry(attempt):
         return wrapper
     return decorator
 
-@retry(attempt=1000)
 def run_task_over():
     import uuid
 #    import pdb;pdb.set_trace()
