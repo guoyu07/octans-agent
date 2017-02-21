@@ -126,7 +126,7 @@ def run_task():
         user_name = conform_param(req_json, "user", basestring, allowNone=True)
         fork_num = conform_param(req_json, "fork_num", int, allowNone=True)
         come_from_master = conform_param(req_json, "come_from_master", int, allowNone=True)
-        req_json = conform_param(req_json, "mtask_id", int, allowNone=True)
+        mtask_id = conform_param(req_json, "mtask_id", int, allowNone=True)
         # check task name duplicate
         if (come_from_master == 1) and (mtask_id is not None):
             task = Service.get_task_by_name(task_name)
