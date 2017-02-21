@@ -125,19 +125,35 @@ def run_task():
         params = conform_param(req_json, "params", dict,{},True)
         user_name = conform_param(req_json, "user", basestring, allowNone=True)
         fork_num = conform_param(req_json, "fork_num", int, allowNone=True)
+        come_from_master = conform_param(req_json, "come_from_master", int, allowNone=True)
+        req_json = conform_param(req_json, "mtask_id", int, allowNone=True)
         # check task name duplicate
-        task = Service.get_task_by_name(task_name)
-        if task is not None:
-            Logger.error("task name is duplicate:" + task_name)
-            return return_failed(-1, "task name is duplicate"), 400
-        task_id = Service.new_task({"name": task_name})
+        if (come_from_master == 1) and (mtask_id is not None):
+            task = Service.get_task_by_name(task_name)
+            # if task is not None:
+            #     Logger.error("task name is duplicate:" + task_name)
+            #     return return_failed(-1, "task name is duplicate"), 400
+            #task_id = Service.new_task({"name": task_name})
 
-        #submit task
-        Worker.submit(
-            AnsibleTask(task_id=str(task_id), name=task_name, hosts=nodes, tasks=tasks,tasktype=tasktype, params=params, user=user_name,
-                        forks=fork_num, global_id=global_id, source=source, result=""))
+            #submit task
+            Worker.submit(
+                AnsibleTask(task_id=str(task.id), name=task_name, hosts=nodes, tasks=tasks,tasktype=tasktype, params=params, user=user_name,
+                            forks=fork_num, global_id=global_id, source=source, result=""))
 
-        return return_success(content={"id": task_id}), 200
+            return return_success(content={"id": task.id}), 200
+        else:
+            task = Service.get_task_by_name(task_name)
+            if task is not None:
+                Logger.error("task name is duplicate:" + task_name)
+                return return_failed(-1, "task name is duplicate"), 400
+            task_id = Service.new_task({"name": task_name})
+
+            #submit task
+            Worker.submit(
+                AnsibleTask(task_id=str(task_id), name=task_name, hosts=nodes, tasks=tasks,tasktype=tasktype, params=params, user=user_name,
+                            forks=fork_num, global_id=global_id, source=source, result=""))
+
+            return return_success(content={"id": task_id}), 200
     except JsonEncodeException as e:
         Logger.error("try run_task exception ---------@ ")
         return return_failed(-1, "json encode error"), 400
