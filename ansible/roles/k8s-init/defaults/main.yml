@@ -1,0 +1,12 @@
+pkgmgr: "yum"
+pkg_list:
+  - name: "kubernetes"
+  - name: "etcd"
+  - name: "flannel"
+flannel_iface: "eth0"
+services:
+  - kube-proxy
+  - kubelet
+  - flanneld
+  - docker
+retry_stagger: 4

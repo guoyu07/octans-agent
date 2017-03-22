@@ -1,0 +1,64 @@
+---
+- name: Add yum repo
+  template:
+    src: "yum.repo.j2"
+    dest: "/etc/yum.repos.d/docker.repo"
+  when: ansible_distribution in ["CentOS","RedHat"]
+
+- name: Ensure packages are installed
+  action: "yum"
+  args:
+    pkg: "{{item.name}}"
+    force: "{{item.force|default(omit)}}"
+    state: present
+  register: installed
+  until: installed
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  with_items: "{{ pkg_list }}"
+  #notify: restart docker
+  when: not (ansible_os_family in ["CoreOS", "Container Linux by CoreOS"] )
+
+- name: Setup kubernetes config
+  template:
+    src: "kubernetes.j2"
+    dest: "/etc/kubernetes/config"
+
+- name: Setup kubelet config
+  template:
+    src: "kubelet.j2"
+    dest: "/etc/kubernetes/kubelet"
+
+- name: Setup flanneld config
+  template:
+    src: "flanneld.j2"
+    dest: "/etc/sysconfig/flanneld"
+
+- name: Ensure services are started and enabled
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_items: "{{ services }}"
+
+- name: Configure kubectl - set-cluster
+  shell: 'kubectl config set-cluster default-cluster --server=http://{{master_ip}}:8080'
+- name: Configure kubectl - set-context
+  shell: "kubectl config set-context default-context --cluster=default-cluster --user=default-admin"
+- name: Configure kubectl - use-context
+  shell: "kubectl config use-context default-context"
+
+- name: Get docker booster from Daocloud
+  get_url:
+    url: "https://get.daocloud.io/daotools/set_mirror.sh"
+    dest: "/root/set_mirror.sh"
+- name: Use docker booster by Daocloud
+  shell: "sh /root/set_mirror.sh http://4f4db0a7.m.daocloud.io && systemctl restart docker"
+
+- name: Pull infra image
+  shell: "docker pull docker.io/mritd/pause-amd64 &&
+    docker tag docker.io/mritd/pause-amd64 gcr.io/google_containers/pause-amd64:3.0 &&
+    docker tag gcr.io/google_containers/pause-amd64:3.0 gcr.io/google_containers/pause-amd64"
+
+#- name: Restart flanneld
+#  shell: 'service flanneld restart'
