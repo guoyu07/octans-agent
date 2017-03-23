@@ -31,5 +31,5 @@ DOCKER_CERT_PATH=/etc/docker
 # Controls the /etc/cron.daily/docker-logrotate cron job status.
 # To disable, uncomment the line below.
 # LOGROTATE=false
-OPTIONS="-g=/data0/docker -s=devicemapper --ip-forward=false --bridge=none --iptables=false --label idc=aliyun"
+OPTIONS="-g=/data0/docker -s=devicemapper --label idc=aliyun"
 INSECURE_REGISTRY="--insecure-registry docker.io"
