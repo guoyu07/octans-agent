@@ -10,4 +10,4 @@ services:
   - flanneld
   - docker
 retry_stagger: 4
-ip: {{ansible_default_ipv4.address}}
+ip: "{{ansible_default_ipv4.address}}"
